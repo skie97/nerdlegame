@@ -89,7 +89,13 @@ def reply(df, ans, reply):
         if reply[i] == 'G':
             d = set_pos(d, i+1, ans[i])
         elif reply[i] == 'B':
-            d = df_no(d, ans[i])
+            found = False  # There is a special case of double digits. Ignore the color of the second one.
+                           # TODO: Need to better the algo by locking the right answers.
+            for j in range(i):
+                if ans[i] == ans[j]:
+                    found = True
+            if not found:
+                d = df_no(d, ans[i])
         elif reply[i] == 'R':
             d = pos_no(d, i+1, ans[i])
     return d
