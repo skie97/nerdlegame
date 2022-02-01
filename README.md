@@ -16,11 +16,11 @@ using set theory. For each type of response,
 we generate the required boolean vector and filter
 the pandas dataframe.
 
-For black, we generate the vectors for the number not to appear at all.
+For<span style="background-color:#161803"> black </span>, we generate the vectors for the number not to appear at all.
 
-For green, we generate the vector for that position to have that number.
+For<span style="background-color:#398874"> green </span>, we generate the vector for that position to have that number.
 
-For red, we consider the negation of the contrapositive cause it's easier.
+For<span style="background-color:#820458"> red </span>, we consider the negation of the contrapositive cause it's easier.
 Say in this case, if the number exists in another position, it's troublesome
 to construct the vectors directly. It's easier to consider the contrapositive.
 i.e. the number doesn't exist in all other positions.
