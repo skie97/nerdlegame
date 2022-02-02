@@ -1,4 +1,5 @@
 import pandas as pd
+from datetime import datetime
 
 # Idea for the best seed is a sequence with all different digits.
 # TODO: I didn't consider the first digit to be '-' although the answers can be negative.
@@ -107,7 +108,11 @@ def reply(df, ans, reply):
 
 
 if __name__ == '__main__':
+    starttime = datetime.now()
     df = pd.DataFrame(find_best_seed())
+    endtime = datetime.now()
+    print(f"Took {(endtime-starttime).total_seconds()} seconds!")
+
     sorted_df = df.sort_values(by='score', ascending=False)
     only8 = sorted_df[sorted_df['score']==8].sort_values(by='statement')
     d = only8
