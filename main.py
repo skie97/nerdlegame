@@ -7,40 +7,56 @@ from datetime import datetime
 def find_best_seed():
     i = 0
     j = 0
-    op = ["*", "-", "+", "/"]
+    op = ["*", "-", "+"]
     valid = []
-    while i < 100:
-        while j < 100:
+    noRepeat = {}
+    for i in range(100):
+        for j in range(100):
             for s in op:
-                statement = ""
-                if s == "/" and j != 0 and i % j == 0:
-                    statement = f"{i}{s}{j}"
-                    if len(f"{i}{s}{j}={eval(statement):.0f}") == 8:
-                        statement = f"{i}{s}{j}={eval(statement):.0f}"
-                    else:
-                        statement = ""
-                elif s != "/":
-                    statement = f"{i}{s}{j}"
-                    if len(f"{i}{s}{j}={eval(statement)}") == 8:
-                        statement = f"{i}{s}{j}={eval(statement)}"
-                    else:
-                        statement = ""
-                if len(statement) > 0:
-                    valid.append({'statement': statement,
-                                  '1': statement[0],
-                                  '2': statement[1],
-                                  '3': statement[2],
-                                  '4': statement[3],
-                                  '5': statement[4],
-                                  '6': statement[5],
-                                  '7': statement[6],
-                                  '8': statement[7],
-                                  'score': score_statement(statement)})
-            j += 1
-        i += 1
-        j = 0
+                statement = f"{i}{s}{j}"
+                ans = f"{eval(statement)}"
+                fullStatement = f"{statement}={ans}"
+                if len(fullStatement) == 8 and fullStatement not in noRepeat:
+                    valid.append(genDictFromStatement(fullStatement))
+                    noRepeat[fullStatement] = True
+                    if s == "*" and i != 0:
+                        fullStatement = f"{ans}/{i}={j}"
+                        assert fullStatement not in noRepeat
+                        valid.append(genDictFromStatement(fullStatement))
+                        noRepeat[fullStatement] = True
+                    if s == "+":
+                        fullStatement = f"{ans}-{i}={j}"
+                        assert fullStatement not in noRepeat
+                        valid.append(genDictFromStatement(fullStatement))
+                        noRepeat[fullStatement] = True
+                elif len(fullStatement) == 7 and s == "+":
+                    fullStatement = f"{i}-{ans}=-{j}"
+                    if fullStatement not in noRepeat:
+                        valid.append(genDictFromStatement(fullStatement))
+                        noRepeat[fullStatement] = True
+                elif len(fullStatement) == 6 and (s == "+" or s == "-"):
+                    fullStatement = f"-{ans}{s}{j}=-{i}"
+                    assert fullStatement not in noRepeat
+                    valid.append(genDictFromStatement(fullStatement))
+                    noRepeat[fullStatement] = True
+
+    for i in range(1000, 10000):
+        valid.append(genDictFromStatement(f"{i}*0=0"))
+        valid.append(genDictFromStatement(f"0*{i}=0"))
     return valid
 
+
+def genDictFromStatement(s):
+    return {'statement': s,
+            '1': s[0],
+            '2': s[1],
+            '3': s[2],
+            '4': s[3],
+            '5': s[4],
+            '6': s[5],
+            '7': s[6],
+            '8': s[7],
+            'score': score_statement(s)}
 
 def score_statement(s):
     d = {}
@@ -92,8 +108,10 @@ def reply(df, ans, reply):
         elif reply[i] == 'B':
             found = False  # There is a special case of double digits. Ignore the color of the second one.
                            # TODO: Need to better the algo by locking the right answers.
-            for j in range(i):
-                if ans[i] == ans[j]:
+            for j in range(8):
+                if j < i and ans[i] == ans[j]:
+                    found = True
+                elif j > i and ans[i] == ans[j] and reply[j] == 'G':
                     found = True
             if not found:
                 d = df_no(d, ans[i])
