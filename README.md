@@ -5,10 +5,12 @@ Basically a text based solver for the nerdle game.
 The general idea is to generate all possible sequences and solutions to the game.
 One limitation that was imposed was not to start with a negative number.
 But, it is possible for the answer to be negative.
+It takes about 1.5 mins to generate that solution space of
+61879 so this is stored as a solspace.csv.
 
 Next, score each of the sequences based on the number of unique digits
 and operators. The highest number is of course 8.
-There are actually a total of 1128 such sequences.
+There are actually a total of 3667 such sequences.
 We will randomly pick one of these as the seed.
 
 The next couple of steps is simply a logic puzzle

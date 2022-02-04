@@ -1,5 +1,6 @@
 import pandas as pd
 from datetime import datetime
+import os
 
 # Idea for the best seed is a sequence with all different digits.
 # TODO: I didn't consider the first digit to be '-' although the answers can be negative.
@@ -39,6 +40,23 @@ def find_best_seed():
                     assert fullStatement not in noRepeat
                     valid.append(genDictFromStatement(fullStatement))
                     noRepeat[fullStatement] = True
+
+    op = ["*", "-", "+", "/"]
+    for i in range(100):
+        for j in range(100):
+            for k in range(100):
+                for x in op:
+                    for y in op:
+                        statement = f"{i}{x}{j}{y}{k}"
+                        try:
+                            ans = eval(f"{i}{x}{j}{y}{k}")
+                        except ZeroDivisionError:
+                            continue
+                        else:
+                            if float(ans).is_integer() and len(f"{statement}={ans:.0f}") == 8:
+                                valid.append((genDictFromStatement(f"{statement}={ans:.0f}")))
+
+
 
     for i in range(1000, 10000):
         valid.append(genDictFromStatement(f"{i}*0=0"))
@@ -126,10 +144,15 @@ def reply(df, ans, reply):
 
 
 if __name__ == '__main__':
-    starttime = datetime.now()
-    df = pd.DataFrame(find_best_seed())
-    endtime = datetime.now()
-    print(f"Took {(endtime-starttime).total_seconds()} seconds!")
+    if os.path.exists('solspace.csv'):
+        df = pd.read_csv('solspace.csv')
+        print(f"Found solution file!")
+    else:
+        starttime = datetime.now()
+        df = pd.DataFrame(find_best_seed())
+        endtime = datetime.now()
+        print(f"Solution file not found!\nTook {(endtime-starttime).total_seconds()} seconds to generate!")
+        df.to_csv('solspace.csv')
 
     sorted_df = df.sort_values(by='score', ascending=False)
     only8 = sorted_df[sorted_df['score']==8].sort_values(by='statement')
