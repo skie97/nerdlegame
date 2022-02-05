@@ -164,6 +164,10 @@ if __name__ == '__main__':
     while len(d) != 1:
         print(f"What is the response to {ans}?\nReply Key: G - Green, B - Black, R - Red")
         r = input()
+        if ':' in r:
+            ans, r = r.split(":")
+            assert(len(ans) == 8)
+            assert(len(r) == 8)
         d = reply(d, ans, r)
         ans = d.sample().iloc[0].statement
     print(f"The answer is {d.sample().iloc[0].statement}!")
