@@ -145,7 +145,9 @@ def reply(df, ans, reply):
 
 if __name__ == '__main__':
     if os.path.exists('solspace.csv'):
-        df = pd.read_csv('solspace.csv')
+        df = pd.read_csv('solspace.csv', dtype={1: 'str', 2: 'str', 3: 'str', 4: 'str',
+                                                5: 'str', 6: 'str', 7: 'str', 8: 'str', 9: 'str',
+                                                10: 'int'})
         print(f"Found solution file!")
     else:
         starttime = datetime.now()
