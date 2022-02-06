@@ -168,6 +168,11 @@ if __name__ == '__main__':
             ans, r = r.split(":")
             assert(len(ans) == 8)
             assert(len(r) == 8)
+        if r == "GGGGGGGG":
+            print(f"Lucky! There were another {len(d)-1} options.\nThese were:")
+            for index, row in d.iterrows():
+                if row['statement'] != ans:
+                    print(f"{row['statement']}")
         d = reply(d, ans, r)
         ans = d.sample().iloc[0].statement
     print(f"The answer is {d.sample().iloc[0].statement}!")
